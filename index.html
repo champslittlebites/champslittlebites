@@ -1,0 +1,756 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Champ's Little Bites">
+<title>Champ's Little Bites Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sage:#5C7E62;--sage-l:#EDF3EE;--sage-p:#F4FAF5;
+  --peach:#E8895A;--peach-l:#FEF0E3;--peach-p:#FFF8F2;
+  --cream:#FDFAF6;--white:#FFFFFF;
+  --ink:#1E2B1F;--ink-mid:#3D5040;--ink-soft:#6B7D6D;
+  --lav:#C4B3E5;--lav-l:#F0EBF9;
+  --sky:#8ECFDF;--sky-l:#E8F6FA;
+  --blush:#F0AFBA;--blush-l:#FEF0F3;
+  --amber:#E8A030;--amber-l:#FEF4E0;
+  --border:rgba(92,126,98,0.14);
+  --r:14px;--rs:9px;
+  --font-head:'Fraunces',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+}
+body{font-family:var(--font-body);background:var(--cream);color:var(--ink);font-size:15px;line-height:1.65}
+
+/* NAV */
+.nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 18px;display:flex;align-items:center;position:sticky;top:0;z-index:200;box-shadow:0 1px 12px rgba(30,43,31,.06)}
+.brand{font-family:var(--font-head);font-size:17px;color:var(--sage);padding:13px 0;margin-right:auto;display:flex;align-items:center;gap:8px;font-weight:600}
+.nav-scroll{display:flex;overflow-x:auto;gap:0;-webkit-overflow-scrolling:touch}
+.nav-scroll::-webkit-scrollbar{display:none}
+.ntab{padding:15px 11px;font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-soft);cursor:pointer;border:none;background:none;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;font-family:var(--font-body)}
+.ntab:hover{color:var(--sage)}
+.ntab.on{color:var(--sage);border-bottom-color:var(--sage)}
+
+/* SECTIONS */
+.sec{display:none;padding:26px 20px;max-width:940px;margin:0 auto}
+.sec.on{display:block}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--sage-l),var(--peach-l));border-radius:var(--r);padding:30px 28px;margin-bottom:22px;display:flex;align-items:center;gap:20px;border:1px solid var(--border)}
+.hero-ico{font-size:50px;flex-shrink:0}
+.hero-h{font-family:var(--font-head);font-size:26px;color:var(--ink);margin-bottom:5px;font-weight:600}
+.hero-s{font-size:14px;color:var(--ink-mid);line-height:1.6}
+
+/* STAT ROW */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.stat{background:var(--white);border-radius:var(--rs);border:1px solid var(--border);padding:14px;text-align:center}
+.stat-n{font-size:26px;font-weight:600;color:var(--sage);margin-bottom:2px;font-family:var(--font-head)}
+.stat-l{font-size:10px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+/* CARDS */
+.card{background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:22px;margin-bottom:18px}
+.card-h{font-family:var(--font-head);font-size:18px;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:9px;font-weight:600}
+
+/* BUTTONS */
+.abtn{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--white);color:var(--ink-mid);transition:all .2s;font-family:var(--font-body)}
+.abtn:hover{border-color:var(--sage);color:var(--sage);background:var(--sage-p)}
+.abtn.pri{background:var(--sage);color:var(--white);border-color:var(--sage)}
+.abtn.pri:hover{background:var(--ink-mid)}
+.abar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+
+/* AGE TABS */
+.atabs{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap}
+.atab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--white);color:var(--ink-soft);transition:all .2s;font-family:var(--font-body)}
+.atab:hover{border-color:var(--sage);color:var(--sage)}
+.atab.on{background:var(--sage);color:var(--white);border-color:var(--sage)}
+
+/* WEEK */
+.wsel{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.wsel button{background:none;border:1.5px solid var(--border);border-radius:8px;padding:5px 11px;cursor:pointer;font-size:12px;color:var(--ink-mid);font-family:var(--font-body);font-weight:500;transition:all .2s}
+.wsel button:hover{border-color:var(--sage);color:var(--sage)}
+.wlbl{font-size:14px;font-weight:500;color:var(--ink);font-family:var(--font-head)}
+.ptbl{width:100%;border-collapse:separate;border-spacing:5px}
+.dhdr{text-align:center;font-size:10px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;padding:4px 2px}
+.mlbl{font-size:10px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.3px;padding:6px 4px 6px 0;vertical-align:middle;white-space:nowrap;width:68px}
+.mcell{background:var(--sage-p);border-radius:9px;padding:8px 6px;font-size:11px;line-height:1.3;color:var(--ink-mid);border:1.5px solid var(--border);min-height:62px;text-align:center;vertical-align:middle;position:relative;cursor:grab;user-select:none;transition:all .15s;font-family:var(--font-body)}
+.mcell:hover{border-color:var(--sage);background:var(--sage-l)}
+.mcell.bf{background:var(--peach-p);border-color:rgba(232,137,90,.2)}
+.mcell.bf:hover{background:var(--peach-l);border-color:var(--peach)}
+.mcell.sn{background:var(--lav-l);border-color:rgba(196,179,229,.3)}
+.mcell.sn:hover{background:#E8E2F6;border-color:var(--lav)}
+.mcell.dn{background:var(--sky-l);border-color:rgba(142,207,223,.3)}
+.mcell.dn:hover{background:#D6EFF6;border-color:var(--sky)}
+.mcell.dragging{opacity:.38;transform:scale(.95);cursor:grabbing}
+.mcell.dragover{border-color:var(--sage);border-width:2px;background:var(--sage-l)!important;transform:scale(1.04)}
+.mcell.dup{border-color:#D84040!important;border-width:2px}
+.cedit{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:4px;background:rgba(92,126,98,.15);border:none;font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--sage);padding:0;font-family:var(--font-body)}
+.mcell:hover .cedit{display:flex}
+.cemoji{font-size:18px;display:block;margin-bottom:3px}
+.cname{display:block;font-size:10px;font-weight:500}
+.cfrz{font-size:9px;color:#1A6070;display:block;margin-top:2px}
+
+/* PICKER */
+.picker{background:var(--white);border:1.5px solid var(--sage);border-radius:var(--r);padding:18px;margin-bottom:18px}
+.picker-h{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:9px}
+.popt{background:var(--sage-p);border:1.5px solid var(--border);border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s}
+.popt:hover{background:var(--sage-l);border-color:var(--sage);transform:translateY(-1px)}
+.popt .pe{font-size:20px;display:block;margin-bottom:3px}
+.popt .pn{font-size:10px;color:var(--ink-mid);font-weight:500;line-height:1.3}
+.popt .pf{font-size:9px;color:#1A6070}
+
+/* DUP BANNER */
+.dupbanner{background:#FEF0F2;border:1px solid var(--blush);border-radius:var(--rs);padding:10px 15px;font-size:12px;color:#A32D2D;display:none;margin-bottom:14px;align-items:center;gap:8px;font-weight:500}
+.dupbanner.on{display:flex}
+
+/* FOOD GRID */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:11px}
+.fcard{background:var(--sage-p);border-radius:var(--rs);border:1px solid var(--border);padding:13px 10px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.fcard:hover{transform:translateY(-2px);border-color:var(--sage)}
+.fcard .fe{font-size:27px;margin-bottom:5px;display:block}
+.fcard .fn{font-size:12px;font-weight:600;color:var(--ink)}
+.fcard .fa{font-size:10px;color:var(--ink-soft);margin-top:2px}
+.fcard .fb{position:absolute;top:5px;right:5px;background:var(--sky);color:#1A6070;font-size:8px;padding:2px 4px;border-radius:6px;font-weight:700}
+.fcard.pro{background:var(--blush-l);border-color:rgba(240,175,186,.3)}
+.fcard.gr{background:var(--lav-l);border-color:rgba(196,179,229,.3)}
+
+/* RECIPE GRID */
+.rgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.rcard{background:var(--white);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all .2s}
+.rcard:hover{transform:translateY(-2px);border-color:var(--sage)}
+.rhead{padding:17px;background:var(--sage-p);border-bottom:1px solid var(--border)}
+.remoji{font-size:30px;margin-bottom:7px;display:block}
+.rname{font-family:var(--font-head);font-size:16px;color:var(--ink);margin-bottom:4px;font-weight:600}
+.rmeta{display:flex;gap:7px;flex-wrap:wrap}
+.rbdg{font-size:9px;font-weight:600;padding:3px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px}
+.bag{background:var(--sage-l);color:var(--sage)}
+.bat{background:var(--peach-l);color:#B85A20}
+.baf{background:var(--sky-l);color:#1A6070}
+.rbody{padding:13px 17px}
+.rsec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);margin-bottom:4px;margin-top:10px}
+.ings{list-style:none}
+.ings li{font-size:12px;color:var(--ink-mid);padding:3px 0;display:flex;align-items:center;gap:5px}
+.ings li::before{content:'·';color:var(--sage);font-size:16px}
+.steps{list-style:none;counter-reset:s}
+.steps li{font-size:12px;color:var(--ink-mid);padding:4px 0 4px 21px;position:relative;counter-increment:s;line-height:1.5}
+.steps li::before{content:counter(s);position:absolute;left:0;width:15px;height:15px;background:var(--sage);color:var(--white);border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;top:5px}
+.vlink{display:flex;align-items:center;gap:7px;background:#CC0000;color:var(--white);border-radius:8px;padding:8px 13px;margin-top:11px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity .2s}
+.vlink:hover{opacity:.85}
+
+/* SHOPPING */
+.scat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.scat{background:var(--white);border-radius:var(--rs);border:1px solid var(--border);padding:16px}
+.scath{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px;font-family:var(--font-head)}
+.sitem{display:flex;align-items:center;gap:9px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.04);cursor:pointer}
+.sitem:last-child{border-bottom:none}
+.schk{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--sage);flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.schk.on{background:var(--sage);border-color:var(--sage)}
+.schk.on::after{content:'✓';color:var(--white);font-size:9px;font-weight:700}
+.sname{font-size:12px;color:var(--ink-mid);flex:1;font-weight:400}
+.sqty{font-size:10px;color:var(--ink-soft)}
+.scst{font-size:11px;color:var(--sage);font-weight:600}
+
+/* FREEZER */
+.frzgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.frzcard{background:var(--sky-l);border-radius:var(--rs);border:1px solid rgba(142,207,223,.4);padding:15px;text-align:center}
+.frzcard .ffemoji{font-size:25px;margin-bottom:7px;display:block}
+.frzcard .ffname{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;font-family:var(--font-head)}
+.frzcard .ffdur{font-size:14px;font-weight:600;color:#1A6070}
+.frzcard .fftip{font-size:10px;color:var(--ink-soft);margin-top:3px;line-height:1.4}
+.bstep{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:var(--sage-p);border-radius:9px;border:1px solid var(--border);margin-bottom:7px}
+.btime{font-size:11px;font-weight:700;color:var(--sage);min-width:78px;padding-top:1px}
+.btask{font-size:13px;color:var(--ink-mid);line-height:1.5}
+
+/* ALLERGY */
+.allergyGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.aitem{background:var(--white);border-radius:var(--rs);border:1px solid var(--border);padding:13px 10px;text-align:center;cursor:pointer;transition:all .2s}
+.aitem:hover{border-color:var(--sage)}
+.aitem .ae{font-size:21px;margin-bottom:3px;display:block}
+.aitem .an{font-size:11px;font-weight:600;color:var(--ink);font-family:var(--font-head)}
+.aitem .as{font-size:10px;margin-top:5px;padding:3px 7px;border-radius:10px;font-weight:600}
+.s0{background:#F3F4F6;color:#9CA3AF}
+.s1{background:var(--sage-l);color:var(--sage)}
+.s2{background:var(--peach-l);color:#B85A20}
+.s3{background:var(--blush-l);color:#A32D2D}
+
+/* ALLERGEN TIMELINE */
+.timeline{position:relative;padding-left:24px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--sage-l)}
+.tmonth{position:relative;margin-bottom:18px}
+.tmonth::before{content:'';position:absolute;left:-20px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--sage);border:2px solid var(--white)}
+.tmonth-h{font-family:var(--font-head);font-size:15px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.tmonth-age{font-size:11px;font-weight:600;color:var(--sage);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.tallergens{display:flex;flex-wrap:wrap;gap:6px}
+.tbadge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;border:1.5px solid}
+.tnew{background:var(--peach-l);color:#B85A20;border-color:rgba(232,137,90,.4)}
+.tcarry{background:var(--sage-l);color:var(--sage);border-color:rgba(92,126,98,.3)}
+.twarn{background:var(--amber-l);color:#8A5010;border-color:rgba(232,160,48,.4)}
+
+/* NUTRIENTS */
+.nurgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.nurcard{background:var(--white);border-radius:var(--r);border:1px solid var(--border);overflow:hidden}
+.nurhead{padding:14px 16px;display:flex;align-items:center;gap:10px}
+.nurico{font-size:24px;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nurname{font-family:var(--font-head);font-size:15px;font-weight:600;color:var(--ink)}
+.nurrole{font-size:11px;color:var(--ink-soft)}
+.nurbody{padding:0 16px 14px}
+.nurtag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:6px;margin-top:10px}
+.nurfoods{display:flex;flex-wrap:wrap;gap:5px}
+.nurfood{font-size:11px;background:var(--sage-p);color:var(--sage);padding:3px 9px;border-radius:20px;font-weight:600}
+
+/* SOAKING */
+.soakgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.soakcard{background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:18px}
+.soakh{font-family:var(--font-head);font-size:16px;font-weight:600;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.soaksteps{list-style:none;counter-reset:ss}
+.soaksteps li{font-size:13px;color:var(--ink-mid);padding:6px 0 6px 26px;position:relative;counter-increment:ss;line-height:1.55;border-bottom:1px solid rgba(0,0,0,.05)}
+.soaksteps li:last-child{border-bottom:none}
+.soaksteps li::before{content:counter(ss);position:absolute;left:0;width:18px;height:18px;background:var(--sage-l);color:var(--sage);border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;top:7px}
+.warnbox{background:var(--amber-l);border:1px solid rgba(232,160,48,.4);border-radius:var(--rs);padding:12px 14px;font-size:12px;color:#8A5010;margin-top:14px;display:flex;align-items:flex-start;gap:8px}
+
+/* MONTH CHECKLIST */
+.mchklist{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-top:6px}
+.mchkitem{display:flex;align-items:center;gap:7px;padding:4px 8px;border-radius:7px;cursor:pointer;transition:background .15s}
+.mchkitem:hover{background:var(--sage-p)}
+.mchkbox{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--sage);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.mchkbox.on{background:var(--sage);border-color:var(--sage)}
+.mchkbox.on::after{content:'✓';color:var(--white);font-size:9px;font-weight:700}
+.mchktxt{font-size:12px;color:var(--ink-mid);font-weight:400}
+.mchktxt.done{text-decoration:line-through;color:var(--ink-soft)}
+
+/* NOTES JOURNAL */
+.jmonths{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.jmbtn{padding:7px 10px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--white);color:var(--ink-soft);transition:all .2s;font-family:var(--font-body)}
+.jmbtn:hover{border-color:var(--sage);color:var(--sage)}
+.jmbtn.on{background:var(--sage);color:var(--white);border-color:var(--sage)}
+.jentry{background:var(--sage-p);border-radius:var(--rs);border:1px solid var(--border);padding:14px;margin-bottom:10px}
+.jentry-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.jentry-date{font-size:12px;font-weight:600;color:var(--sage);font-family:var(--font-head)}
+.jentry-food{font-size:13px;color:var(--ink);font-weight:500}
+.jentry-note{font-size:12px;color:var(--ink-mid);line-height:1.5}
+.jentry-badges{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.jbdg{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.jbdg-ok{background:var(--sage-l);color:var(--sage)}
+.jbdg-watch{background:var(--amber-l);color:#8A5010}
+.jbdg-avoid{background:var(--blush-l);color:#A32D2D}
+.jnew{background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:18px}
+.jnew-h{font-family:var(--font-head);font-size:15px;font-weight:600;color:var(--ink);margin-bottom:14px}
+.jfield{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:var(--font-body);color:var(--ink);background:var(--white);margin-bottom:10px;outline:none;transition:border-color .2s}
+.jfield:focus{border-color:var(--sage)}
+.jfield-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.jradio{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.jrlbl{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--white);color:var(--ink-soft);transition:all .15s}
+.jrlbl input{display:none}
+.jrlbl:has(input:checked){background:var(--sage);color:var(--white);border-color:var(--sage)}
+
+/* TIPS */
+.tiprow{display:flex;gap:12px;margin-bottom:12px}
+.tipbox{flex:1;background:var(--white);border-radius:var(--rs);border:1px solid var(--border);padding:15px}
+.tipico{font-size:21px;margin-bottom:7px}
+.tiph{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:5px;font-family:var(--font-head)}
+.tipb{font-size:12px;color:var(--ink-mid);line-height:1.6}
+
+/* MODAL */
+.modalbg{display:none;position:fixed;inset:0;background:rgba(30,43,31,.5);z-index:300;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.modalbg.on{display:flex}
+.modal{background:var(--white);border-radius:var(--r);max-width:500px;width:100%;max-height:85vh;overflow-y:auto;margin:auto}
+.modal-h{padding:20px 20px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.modal-ht{font-family:var(--font-head);font-size:20px;color:var(--ink);font-weight:600}
+.modal-cls{font-size:18px;color:var(--ink-soft);cursor:pointer;padding:4px;border:none;background:none}
+.modal-b{padding:16px 20px 24px}
+
+.tag{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.tg{background:var(--sage-l);color:var(--sage)}
+.to{background:var(--peach-l);color:#B85A20}
+.tb{background:var(--sky-l);color:#1A6070}
+
+.stitle{font-family:var(--font-head);font-size:22px;color:var(--ink);margin-bottom:5px;font-weight:600}
+.ssub{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.divider{border:none;border-top:1px solid var(--border);margin:18px 0}
+
+/* PWA badge */
+.pwabadge{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:var(--white);font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;margin-top:8px;cursor:pointer}
+</style>
+
+<nav class="nav">
+  <div class="brand">🌿 Champ's Little Bites</div>
+  <div class="nav-scroll">
+    <button class="ntab on" onclick="showSec('planner',this)">📅 Planner</button>
+    <button class="ntab" onclick="showSec('foods',this)">🥦 Foods</button>
+    <button class="ntab" onclick="showSec('recipes',this)">📖 Recipes</button>
+    <button class="ntab" onclick="showSec('allergen',this)">⚠️ Allergens</button>
+    <button class="ntab" onclick="showSec('nutrients',this)">💊 Nutrients</button>
+    <button class="ntab" onclick="showSec('checklist',this)">✅ Checklists</button>
+    <button class="ntab" onclick="showSec('journal',this)">📓 Journal</button>
+    <button class="ntab" onclick="showSec('soaking',this)">💧 Soaking</button>
+    <button class="ntab" onclick="showSec('shopping',this)">🛒 Shopping</button>
+    <button class="ntab" onclick="showSec('freezer',this)">❄️ Freezer</button>
+    <button class="ntab" onclick="showSec('tips',this)">💡 Tips</button>
+  </div>
+</nav>
+
+<!-- PLANNER -->
+<div id="sec-planner" class="sec on">
+  <div class="hero">
+    <div class="hero-ico">👶</div>
+    <div>
+      <div class="hero-h">Champ's Little Bites Planner</div>
+      <div class="hero-s">Whole-food, budget-friendly meals · 6–12 months · Drag tiles to swap · Click ✎ to pick · ❄️ = freezer-safe</div>
+      <div class="pwabadge" onclick="installPWA()"><i class="ti ti-device-mobile" aria-hidden="true"></i> Add to Home Screen</div>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">30+</div><div class="stat-l">Recipes</div></div>
+    <div class="stat"><div class="stat-n">11</div><div class="stat-l">Sections</div></div>
+    <div class="stat"><div class="stat-n">~$2</div><div class="stat-l">Per Serving</div></div>
+    <div class="stat"><div class="stat-n">PWA</div><div class="stat-l">App-Ready</div></div>
+  </div>
+  <div class="abar">
+    <button class="abtn pri" onclick="genWeek()"><i class="ti ti-refresh" aria-hidden="true"></i> Auto-Fill Week</button>
+    <button class="abtn" onclick="checkDups()"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Check Duplicates</button>
+    <button class="abtn" onclick="clearHL()"><i class="ti ti-eraser" aria-hidden="true"></i> Clear</button>
+    <button class="abtn" onclick="window.print()"><i class="ti ti-printer" aria-hidden="true"></i> Print</button>
+  </div>
+  <div class="card" style="padding:16px 16px 20px">
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div class="wsel" style="margin:0">
+        <button onclick="changeWk(-1)">← Prev</button>
+        <span class="wlbl" id="wlbl">Week 1 · 6 months</span>
+        <button onclick="changeWk(1)">Next →</button>
+      </div>
+      <div class="atabs" style="margin:0;margin-left:auto">
+        <span class="atab on" onclick="setAge(this,'6m')" data-age="6m">6 mo</span>
+        <span class="atab" onclick="setAge(this,'7m')" data-age="7m">7–8 mo</span>
+        <span class="atab" onclick="setAge(this,'9m')" data-age="9m">9–10 mo</span>
+        <span class="atab" onclick="setAge(this,'11m')" data-age="11m">11–12 mo</span>
+      </div>
+    </div>
+    <div class="dupbanner" id="dupbanner"><i class="ti ti-alert-circle" aria-hidden="true"></i><span id="dupmsg"></span></div>
+    <div style="font-size:10px;color:var(--ink-soft);margin-bottom:9px;display:flex;gap:14px;flex-wrap:wrap">
+      <span>🖱 <b>Drag</b> tile to swap</span><span>✎ <b>Pencil</b> to pick a meal</span><span>🔀 <b>Auto-Fill</b> avoids repeats</span>
+    </div>
+    <table class="ptbl">
+      <thead><tr><th style="width:68px"></th>
+        <th class="dhdr">Mon</th><th class="dhdr">Tue</th><th class="dhdr">Wed</th>
+        <th class="dhdr">Thu</th><th class="dhdr">Fri</th><th class="dhdr">Sat</th><th class="dhdr">Sun</th>
+      </tr></thead>
+      <tbody id="meal-body"></tbody>
+    </table>
+  </div>
+  <div class="picker" id="picker" style="display:none">
+    <div class="picker-h"><span id="picker-title">Choose a meal</span>
+      <button class="abtn" style="padding:4px 10px;font-size:11px" onclick="closePicker()"><i class="ti ti-x" aria-hidden="true"></i> Cancel</button>
+    </div>
+    <div class="pgrid" id="pgrid"></div>
+  </div>
+</div>
+
+<!-- FOODS -->
+<div id="sec-foods" class="sec">
+  <div class="stitle">Foods by Stage</div>
+  <div class="ssub">Tap any food card to see prep tips and serving guidance</div>
+  <div class="atabs" id="food-atabs">
+    <span class="atab on" onclick="filterFoods(this,'all')">All Foods</span>
+    <span class="atab" onclick="filterFoods(this,'6m')">6 months</span>
+    <span class="atab" onclick="filterFoods(this,'7m')">7–8 months</span>
+    <span class="atab" onclick="filterFoods(this,'9m')">9–10 months</span>
+    <span class="atab" onclick="filterFoods(this,'11m')">11–12 months</span>
+  </div>
+  <div class="fgrid" id="food-grid"></div>
+</div>
+
+<!-- RECIPES -->
+<div id="sec-recipes" class="sec">
+  <div class="stitle">Recipe Library</div>
+  <div class="ssub">Whole-food recipes with freezer info and YouTube guides</div>
+  <div class="atabs" id="rec-atabs">
+    <span class="atab on" onclick="filterRecs(this,'all')">All</span>
+    <span class="atab" onclick="filterRecs(this,'6m')">6 months</span>
+    <span class="atab" onclick="filterRecs(this,'7m')">7–8 months</span>
+    <span class="atab" onclick="filterRecs(this,'9m')">9–10 months</span>
+    <span class="atab" onclick="filterRecs(this,'11m')">11–12 months</span>
+    <span class="atab" onclick="filterRecs(this,'freeze')">❄️ Freezer-Safe</span>
+  </div>
+  <div class="rgrid" id="rec-grid"></div>
+</div>
+
+<!-- ALLERGEN TIMELINE -->
+<div id="sec-allergen" class="sec">
+  <div class="stitle">Allergen Introduction Timeline</div>
+  <div class="ssub">Month-by-month guide · Introduce one new allergen every 4 days · Always offer alongside a familiar food</div>
+  <div class="card" style="background:var(--amber-l);border-color:rgba(232,160,48,.3);margin-bottom:20px">
+    <div style="font-size:13px;color:#8A5010;line-height:1.7">
+      <strong>Key rules:</strong> Start with 1/8 tsp · Wait 10 minutes for reaction · If no reaction, slowly increase to 2 tsp · Only introduce allergens when baby is well · Introduce at home during daytime · Never introduce before or during naps
+    </div>
+  </div>
+  <div class="timeline" id="allergen-timeline"></div>
+</div>
+
+<!-- NUTRIENTS -->
+<div id="sec-nutrients" class="sec">
+  <div class="stitle">Essential Nutrients Guide</div>
+  <div class="ssub">Key nutrients for babies 6–12 months and the best whole-food sources</div>
+  <div class="nurgrid" id="nut-grid"></div>
+</div>
+
+<!-- MONTH CHECKLIST -->
+<div id="sec-checklist" class="sec">
+  <div class="stitle">Month-by-Month Food Checklists</div>
+  <div class="ssub">Track every food your baby has tried · Tap to check off · Progress saves during your session</div>
+  <div class="atabs" id="cl-atabs">
+    <span class="atab on" onclick="filterCL(this,'6m')">6 months</span>
+    <span class="atab" onclick="filterCL(this,'7m')">7 months</span>
+    <span class="atab" onclick="filterCL(this,'8m')">8 months</span>
+    <span class="atab" onclick="filterCL(this,'9m')">9 months</span>
+    <span class="atab" onclick="filterCL(this,'10m')">10 months</span>
+    <span class="atab" onclick="filterCL(this,'11m')">11 months</span>
+    <span class="atab" onclick="filterCL(this,'12m')">12+ months</span>
+  </div>
+  <div id="cl-content"></div>
+</div>
+
+<!-- JOURNAL -->
+<div id="sec-journal" class="sec">
+  <div class="stitle">Reaction & Notes Journal</div>
+  <div class="ssub">Log food introductions, reactions, and notes for each feeding milestone</div>
+  <div class="jnew">
+    <div class="jnew-h">Add New Entry</div>
+    <div class="jfield-row">
+      <input class="jfield" id="j-date" type="date" placeholder="Date">
+      <input class="jfield" id="j-food" type="text" placeholder="Food introduced">
+    </div>
+    <input class="jfield" id="j-age" type="text" placeholder="Baby's age (e.g. 7 months, 2 weeks)">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:8px">Reaction</div>
+    <div class="jradio">
+      <label class="jrlbl"><input type="radio" name="jreact" value="ok" checked> Tolerated well</label>
+      <label class="jrlbl"><input type="radio" name="jreact" value="watch"> Watch closely</label>
+      <label class="jrlbl"><input type="radio" name="jreact" value="avoid"> Avoid</label>
+      <label class="jrlbl"><input type="radio" name="jreact" value="delay"> Delay — try again</label>
+    </div>
+    <textarea class="jfield" id="j-notes" rows="3" placeholder="Notes: how it was served, baby's response, amount eaten..."></textarea>
+    <button class="abtn pri" onclick="addJEntry()"><i class="ti ti-plus" aria-hidden="true"></i> Save Entry</button>
+  </div>
+  <div class="divider"></div>
+  <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:14px;font-family:var(--font-head)">Previous Entries</div>
+  <div id="j-entries"></div>
+</div>
+
+<!-- SOAKING -->
+<div id="sec-soaking" class="sec">
+  <div class="stitle">Soaking & Souring Guide</div>
+  <div class="ssub">Reduce anti-nutrients in grains, beans, nuts and seeds for better nutrient absorption</div>
+  <div class="card" style="background:var(--amber-l);border-color:rgba(232,160,48,.3);margin-bottom:18px">
+    <div style="font-size:13px;color:#8A5010;line-height:1.7">
+      Grains, beans, legumes, nuts and seeds contain <strong>phytic acid</strong> — an anti-nutrient that blocks absorption of iron, zinc, calcium, magnesium, and manganese. Soaking and souring significantly reduces phytic acid and makes these foods much easier for baby to digest and absorb.
+    </div>
+  </div>
+  <div class="soakgrid">
+    <div class="soakcard">
+      <div class="soakh"><span>🌰</span> Nuts & Seeds</div>
+      <ol class="soaksteps">
+        <li>Cover nuts and seeds with warm filtered water, fully submerged</li>
+        <li>Add 1 tsp salt per 2 cups of nuts/seeds. Stir until dissolved</li>
+        <li>Leave uncovered on counter for 12 hours or overnight</li>
+        <li>Rinse in colander. Use as-is for nut butters or nut milks. Store in fridge up to 5 days</li>
+        <li>OR dehydrate back to crunchy: spread on tray, bake at 150°F (70°C) for up to 24 hrs until completely dry</li>
+      </ol>
+      <div class="warnbox"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Remember: no whole nuts until baby's molars are in</div>
+    </div>
+    <div class="soakcard">
+      <div class="soakh"><span>🌾</span> Grains, Legumes & Beans</div>
+      <ol class="soaksteps">
+        <li>Place dried grains, legumes, or beans in a glass bowl</li>
+        <li>Cover with filtered water until fully submerged</li>
+        <li>Add 1 tbsp culture/acid per 1 cup liquid: yogurt with live cultures, whey, kefir, kombucha, raw apple cider vinegar, or lemon juice</li>
+        <li>Cover with a towel and place in a warm spot (pantry) for 12–24 hours</li>
+        <li>Drain, rinse well, then cook. Soaked beans cook in 1–4 hours depending on type and age</li>
+      </ol>
+      <div class="warnbox"><i class="ti ti-info-circle" aria-hidden="true"></i> Pre-soaked or sprouted grains are available at health food stores to save prep time</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <div class="card-h"><span>🥫</span> Which Foods Need Soaking?</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:8px">Always Soak</div>
+        <div style="font-size:12px;color:var(--ink-mid);line-height:1.8">Black beans · Chickpeas · Kidney beans · Lentils · Cannellini beans · Oats · Barley · Quinoa · Millet · Almonds · Walnuts · Cashews</div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:8px">Optional but Beneficial</div>
+        <div style="font-size:12px;color:var(--ink-mid);line-height:1.8">Rice · Sunflower seeds · Pumpkin seeds · Hemp seeds · Chia seeds · Pine nuts · Flaxseeds</div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:8px">No Soaking Needed</div>
+        <div style="font-size:12px;color:var(--ink-mid);line-height:1.8">Fresh fruits · Vegetables · Meat & poultry · Fish & seafood · Eggs · Dairy · Avocado · Banana</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHOPPING -->
+<div id="sec-shopping" class="sec">
+  <div class="stitle">Weekly Shopping List</div>
+  <div class="ssub">Estimated total: <strong style="color:var(--sage)">$38–52/week</strong> · Tap items to check off</div>
+  <div class="abar">
+    <button class="abtn pri" onclick="chkAll(false)"><i class="ti ti-square" aria-hidden="true"></i> Uncheck All</button>
+    <button class="abtn" onclick="chkAll(true)"><i class="ti ti-check" aria-hidden="true"></i> Check All</button>
+    <button class="abtn" onclick="window.print()"><i class="ti ti-printer" aria-hidden="true"></i> Print</button>
+  </div>
+  <div class="scat-grid" id="shop-grid"></div>
+</div>
+
+<!-- FREEZER -->
+<div id="sec-freezer" class="sec">
+  <div class="stitle">Freezer Meal Guide</div>
+  <div class="ssub">Batch cook and freeze for effortless weekday meals</div>
+  <div class="card" style="background:var(--sky-l);border-color:rgba(142,207,223,.4)">
+    <div class="card-h">❄️ Freezer Storage Times</div>
+    <div class="frzgrid" id="frz-grid"></div>
+  </div>
+  <div class="card">
+    <div class="card-h"><i class="ti ti-clock card-icon" aria-hidden="true" style="color:var(--sage)"></i> 2-Hour Weekend Batch Plan</div>
+    <div id="batch-plan"></div>
+  </div>
+  <div class="card">
+    <div class="card-h">💡 Freezer Tips</div>
+    <div class="tiprow">
+      <div class="tipbox"><div class="tipico">🫙</div><div class="tiph">Ice Cube Tray Method</div><div class="tipb">Each cube = ~1 oz. Transfer frozen cubes to labeled zip bags. Grab 1–2 cubes per meal.</div></div>
+      <div class="tipbox"><div class="tipico">🏷️</div><div class="tiph">Label Everything</div><div class="tipb">Name, date made, age stage. Painter's tape + marker. Oldest always in front.</div></div>
+      <div class="tipbox"><div class="tipico">🔄</div><div class="tiph">Thaw Safely</div><div class="tipb">Overnight in fridge or sealed bag in warm water. Never refreeze thawed baby food.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TIPS -->
+<div id="sec-tips" class="sec">
+  <div class="stitle">Tips & Resources</div>
+  <div class="ssub">Evidence-based guidance from pediatric nutrition research</div>
+  <div class="card">
+    <div class="card-h">🍼 Starting Solids — The Basics</div>
+    <div class="tiprow">
+      <div class="tipbox"><div class="tipico">⏰</div><div class="tiph">Timing</div><div class="tipb">Offer solids when baby is alert and happy. Mid-morning works well. Start with 1–2 teaspoons only.</div></div>
+      <div class="tipbox"><div class="tipico">🥄</div><div class="tiph">Texture Progression</div><div class="tipb">6 mo: smooth purée → 7–8 mo: lumpy/mashed → 9–10 mo: soft chunks → 11–12 mo: soft table food</div></div>
+      <div class="tipbox"><div class="tipico">💧</div><div class="tiph">Hydration</div><div class="tipb">Breast milk or formula remains primary until 12 months. Small sips of water at meals is fine after 6 months.</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h">📺 YouTube Resources</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+      <a href="https://www.youtube.com/results?search_query=baby+led+weaning+6+months" target="_blank" class="vlink"><i class="ti ti-brand-youtube" aria-hidden="true"></i> Baby-Led Weaning Basics</a>
+      <a href="https://www.youtube.com/results?search_query=homemade+baby+food+puree+beginners" target="_blank" class="vlink"><i class="ti ti-brand-youtube" aria-hidden="true"></i> Homemade Purée Techniques</a>
+      <a href="https://www.youtube.com/results?search_query=baby+meal+prep+freezer+batch+cooking" target="_blank" class="vlink"><i class="ti ti-brand-youtube" aria-hidden="true"></i> Batch Cooking for Babies</a>
+      <a href="https://www.youtube.com/results?search_query=introducing+allergenic+foods+baby+safely" target="_blank" class="vlink"><i class="ti ti-brand-youtube" aria-hidden="true"></i> Allergen Introduction Guide</a>
+      <a href="https://www.youtube.com/results?search_query=finger+foods+baby+9+months+BLW" target="_blank" class="vlink"><i class="ti ti-brand-youtube" aria-hidden="true"></i> Finger Foods 9–12 months</a>
+      <a href="https://www.youtube.com/results?search_query=soaking+grains+baby+food" target="_blank" class="vlink"><i class="ti ti-brand-youtube" aria-hidden="true"></i> Soaking Grains & Legumes</a>
+    </div>
+  </div>
+  <p style="font-size:11px;color:var(--ink-soft);text-align:center;padding:12px 0">For informational purposes only. Always consult your pediatrician before introducing new foods or if you have concerns about your baby's health.</p>
+</div>
+
+<!-- MODAL -->
+<div class="modalbg" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-h">
+      <div class="modal-ht" id="modal-title"></div>
+      <button class="modal-cls" onclick="closeModal()"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="modal-b" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const MEALS={
+  '6m':{
+    breakfast:[{n:'Sweet Potato Purée',e:'🍠',f:true},{n:'Banana Mash',e:'🍌',f:false},{n:'Pear Purée',e:'🍐',f:true},{n:'Apple Purée',e:'🍎',f:true},{n:'Avocado Mash',e:'🥑',f:false},{n:'Peach Purée',e:'🍑',f:true},{n:'Prune Purée',e:'💜',f:true}],
+    lunch:[{n:'Butternut Squash',e:'🎃',f:true},{n:'Green Pea Purée',e:'🟢',f:true},{n:'Carrot Purée',e:'🥕',f:true},{n:'Zucchini Purée',e:'🥬',f:true},{n:'Broccoli Purée',e:'🥦',f:true},{n:'Mango Purée',e:'🥭',f:true},{n:'Spinach Purée',e:'🌿',f:true}],
+    snack:[{n:'Breast Milk/Formula',e:'🍼',f:false},{n:'Prune Purée',e:'💜',f:true},{n:'Peach Purée',e:'🍑',f:true},{n:'Apple Water',e:'💧',f:false},{n:'Banana Mash',e:'🍌',f:false}],
+    dinner:[{n:'Sweet Potato + Pea',e:'🍠',f:true},{n:'Carrot + Apple',e:'🥕',f:true},{n:'Butternut + Pear',e:'🎃',f:true},{n:'Avocado + Banana',e:'🥑',f:false},{n:'Zucchini + Apple',e:'🥬',f:true},{n:'Broccoli + Pear',e:'🥦',f:true},{n:'Mango + Carrot',e:'🥭',f:true}]
+  },
+  '7m':{
+    breakfast:[{n:'Oatmeal + Banana',e:'🥣',f:true},{n:'Mango Avocado',e:'🥭',f:false},{n:'Peach Oat Purée',e:'🍑',f:true},{n:'Pear + Spinach',e:'🍐',f:true},{n:'Apple Cinnamon Oat',e:'🍎',f:true},{n:'Banana Berry Mash',e:'🍌',f:false},{n:'Apricot Purée',e:'🟠',f:true}],
+    lunch:[{n:'Lentil Purée',e:'🫘',f:true},{n:'Chicken + Carrot',e:'🍗',f:true},{n:'Salmon + Pea',e:'🐟',f:true},{n:'Turkey + Sweet Potato',e:'🦃',f:true},{n:'Tofu + Broccoli',e:'🥦',f:true},{n:'Beef + Carrot Mash',e:'🥩',f:true},{n:'Fish + Potato',e:'🐟',f:true}],
+    snack:[{n:'Banana Slices',e:'🍌',f:false},{n:'Pear Cubes',e:'🍐',f:false},{n:'Puffed Cereal',e:'⭐',f:false},{n:'Mango Mash',e:'🥭',f:false},{n:'Rice Puffs',e:'🟡',f:false}],
+    dinner:[{n:'Chicken + Sweet Potato',e:'🍗',f:true},{n:'Lentil Dal Purée',e:'🫘',f:true},{n:'Beef + Carrot',e:'🥩',f:true},{n:'Fish + Pea + Potato',e:'🐟',f:true},{n:'Bean + Veggie Blend',e:'🫘',f:true},{n:'Turkey + Carrot',e:'🦃',f:true},{n:'Tofu + Squash',e:'🎃',f:true}]
+  },
+  '9m':{
+    breakfast:[{n:'Scrambled Egg Bits',e:'🍳',f:false},{n:'Banana Oat Pancake',e:'🥞',f:true},{n:'Yogurt + Berry',e:'🫐',f:false},{n:'French Toast Fingers',e:'🍞',f:true},{n:'Avocado Toast Strips',e:'🥑',f:false},{n:'Cottage Cheese + Fruit',e:'🧀',f:false},{n:'Mini Egg Muffin',e:'🥚',f:true}],
+    lunch:[{n:'Pasta + Veggie Sauce',e:'🍝',f:true},{n:'Mini Meatballs',e:'🍖',f:true},{n:'Quesadilla Strips',e:'🫔',f:false},{n:'Salmon Patties',e:'🐟',f:true},{n:'Bean Soft Tacos',e:'🌮',f:false},{n:'Cheese + Veggie Pasta',e:'🧀',f:true},{n:'Chicken Soft Strips',e:'🍗',f:true}],
+    snack:[{n:'Puffs + Soft Fruit',e:'🫐',f:false},{n:'Cheese Cubes',e:'🧀',f:false},{n:'Rice Cake Strips',e:'🍙',f:false},{n:'Soft Pear Slices',e:'🍐',f:false},{n:'Yogurt Spoon',e:'🥛',f:false}],
+    dinner:[{n:'Chicken + Rice Soft',e:'🍗',f:true},{n:'Lentil Veggie Stew',e:'🍲',f:true},{n:'Salmon + Sweet Potato',e:'🐟',f:true},{n:'Turkey Meatballs',e:'🦃',f:true},{n:'Beef + Veggie Soft',e:'🥩',f:true},{n:'Bean + Rice Bowl',e:'🫘',f:true},{n:'Pasta + Chicken',e:'🍝',f:true}]
+  },
+  '11m':{
+    breakfast:[{n:'Mini Egg Muffin',e:'🥚',f:true},{n:'Banana Pancake',e:'🥞',f:true},{n:'Oat Bowl + Fruit',e:'🥣',f:false},{n:'Toast + Peanut Butter',e:'🍞',f:false},{n:'Smoothie Bowl',e:'🥤',f:false},{n:'Yogurt Parfait',e:'🍓',f:false},{n:'Veggie Omelette',e:'🍳',f:false}],
+    lunch:[{n:'Soft Pasta + Sauce',e:'🍝',f:true},{n:'Mini Grilled Cheese',e:'🧀',f:false},{n:'Hummus + Veggie',e:'🫙',f:false},{n:'Turkey + Avocado',e:'🦃',f:false},{n:'Bean Quesadilla',e:'🫔',f:true},{n:'Salmon Rice Bowl',e:'🐟',f:true},{n:'Chicken Veggie Wrap',e:'🍗',f:false}],
+    snack:[{n:'Soft Fruit Chunks',e:'🍓',f:false},{n:'Cheese + Crackers',e:'🧀',f:false},{n:'Yogurt Pouch',e:'🥛',f:false},{n:'Banana + PB',e:'🍌',f:false},{n:'Pear + Ricotta',e:'🍐',f:false}],
+    dinner:[{n:'Family Meal Adapted',e:'🍽️',f:false},{n:'Mini Chicken Soup',e:'🍲',f:true},{n:'Soft Fish Tacos',e:'🌮',f:false},{n:'Lentil Bolognese',e:'🍝',f:true},{n:'Veggie Fried Rice',e:'🍳',f:true},{n:'Turkey Meatball',e:'🦃',f:true},{n:'Bean Soft Burrito',e:'🫔',f:true}]
+  }
+};
+const MTYPES=[{k:'breakfast',l:'Breakfast',c:'bf'},{k:'lunch',l:'Lunch',c:''},{k:'snack',l:'Snack',c:'sn'},{k:'dinner',l:'Dinner',c:'dn'}];
+const FOODS=[
+  {e:'🍠',n:'Sweet Potato',age:'6m',t:'veggie',f:true,prep:'Steam or roast, blend smooth. Mix with breast milk to thin. Excellent first food — mildly sweet and easy to digest.'},
+  {e:'🍌',n:'Banana',age:'6m',t:'fruit',f:false,prep:'Mash with fork — no cooking needed. Choose ripe bananas for natural sweetness and easy digestion.'},
+  {e:'🥑',n:'Avocado',age:'6m',t:'fat',f:false,prep:'Mash ripe avocado, add breast milk to thin. Rich in healthy fats essential for brain development.'},
+  {e:'🍐',n:'Pear',age:'6m',t:'fruit',f:true,prep:'Peel, core, steam 8 min, blend smooth. High in fiber — gentle on digestion. Great paired with broccoli.'},
+  {e:'🍎',n:'Apple',age:'6m',t:'fruit',f:true,prep:'Peel, core, steam 3 mins, blend. Pair with cinnamon at 7+ months. Great mixed with sweet potato.'},
+  {e:'🥕',n:'Carrot',age:'6m',t:'veggie',f:true,prep:'Steam 15 min until very soft, blend well. High in beta carotene for eye development.'},
+  {e:'🥦',n:'Broccoli',age:'6m',t:'veggie',f:true,prep:'Steam florets 8–10 min, blend with water. Pair with pear or apple to balance bitterness.'},
+  {e:'🎃',n:'Butternut Squash',age:'6m',t:'veggie',f:true,prep:'Halve, roast at 400°F 45 min, scoop and blend. Perfect batch food — freezes beautifully.'},
+  {e:'🟢',n:'Green Peas',age:'6m',t:'veggie',f:true,prep:'Frozen peas: microwave 3 min, blend, strain through sieve for smooth texture.'},
+  {e:'🍑',n:'Peach',age:'6m',t:'fruit',f:true,prep:'Peel, pit, steam 5 min or use canned in 100% juice. Naturally sweet, no sugar needed.'},
+  {e:'🫘',n:'Lentils',age:'7m',t:'protein',f:true,prep:'Rinse red lentils, soak 8 hrs, cook 20 min, blend. Excellent plant-based iron source — pair with vitamin C food.'},
+  {e:'🍳',n:'Egg Yolk',age:'6m',t:'protein',f:false,prep:'Soft-boil, remove yolk and mash into purée. Well-cooked egg is less likely to cause reaction. Full egg at 7+ months.'},
+  {e:'🐟',n:'Salmon',age:'8m',t:'protein',f:true,prep:'Bake plain 12 min, flake finely, check carefully for bones. Omega-3 powerhouse for brain development.'},
+  {e:'🍗',n:'Chicken',age:'7m',t:'protein',f:true,prep:'Boil or bake plain, shred or blend with broth. Excellent iron source when paired with vitamin C.'},
+  {e:'🫐',n:'Blueberry',age:'7m',t:'fruit',f:false,prep:'Under 9 months: blend into purée. 9+ months: smash completely flat — whole blueberries are a choking hazard.'},
+  {e:'🥣',n:'Oatmeal',age:'7m',t:'grain',f:true,prep:'Soak overnight first for best digestion. Cook rolled oats with water or breast milk to thick consistency.'},
+  {e:'🧀',n:'Cheese',age:'8m',t:'dairy',f:false,prep:'Grate or cut into very small crumbles. Full-fat only — avoid processed or high-sodium varieties.'},
+  {e:'🥛',n:'Yogurt',age:'8m',t:'dairy',f:false,prep:'Full-fat plain Greek yogurt — no added sugar. Excellent probiotic source. Mix with fruit purée.'},
+  {e:'🥩',n:'Ground Beef',age:'9m',t:'protein',f:true,prep:'Cook thoroughly with no salt. Crumble finely or blend. Excellent heme iron source.'},
+  {e:'🍝',n:'Pasta',age:'9m',t:'grain',f:true,prep:'Cook well beyond al dente. Use tiny shapes like ditalini or orzo. Cut bigger pasta very small.'},
+  {e:'🥞',n:'Pancakes',age:'9m',t:'grain',f:true,prep:'Banana-oat pancake, no sugar or salt. Cut in strips for BLW or small bites for spoon feeding.'},
+  {e:'🥜',n:'Peanut Butter',age:'7m',t:'allergen',f:false,prep:'Thin with water to liquid consistency — NEVER chunky or thick for baby. Always introduce at home during daytime.'},
+];
+const RECIPES=[
+  {e:'🍠',n:'Sweet Potato & Pear Purée',age:'6m',time:'20 min',f:true,i:['1 medium sweet potato, peeled & cubed','1 ripe pear, peeled & cored','2–3 tbsp breast milk or water'],s:['Steam sweet potato and pear together 15 min until very soft','Blend until completely smooth, adding liquid to thin','Cool completely before serving or freezing'],tip:'Makes 8–10 ice cube portions. Freeze immediately after cooling.',v:'https://www.youtube.com/results?search_query=sweet+potato+pear+baby+puree'},
+  {e:'🥑',n:'Avocado Banana Mash',age:'6m',time:'5 min',f:false,i:['½ ripe avocado','½ ripe banana','1 tsp breast milk (optional)'],s:['Mash avocado and banana with fork until smooth','Add breast milk to thin if needed','Serve immediately — avocado browns quickly'],tip:'Rich in healthy fats. Best made fresh.',v:'https://www.youtube.com/results?search_query=avocado+banana+baby+food'},
+  {e:'🥣',n:'Apple Cinnamon Oatmeal',age:'7m',time:'10 min',f:true,i:['¼ cup rolled oats (soaked overnight)','¾ cup water or breast milk','¼ apple, peeled & grated','Pinch of cinnamon'],s:['Cook soaked oats with liquid over medium heat 5 min','Stir in grated apple last 2 minutes','Add cinnamon. Mash lumps for younger babies'],tip:'Soaking oats overnight reduces phytic acid. One cube = perfect serving.',v:'https://www.youtube.com/results?search_query=baby+oatmeal+apple+cinnamon'},
+  {e:'🍳',n:'Banana Oat Pancakes',age:'9m',time:'15 min',f:true,i:['1 ripe banana','1 egg','¼ cup rolled oats (blended to flour)','Coconut oil for pan'],s:['Blend oats to flour. Mash banana, mix with egg and oat flour','Cook silver-dollar pancakes on medium-low, 2–3 min per side','Cool completely, cut into strips'],tip:'Stack with parchment, freeze in zip bag. Reheat in toaster from frozen!',v:'https://www.youtube.com/results?search_query=banana+oat+baby+pancakes+BLW'},
+  {e:'🫘',n:'Red Lentil Veggie Purée',age:'7m',time:'25 min',f:true,i:['½ cup red lentils (soaked 8 hrs, rinsed)','1 small carrot, chopped','2 cups low-sodium veggie broth'],s:['Combine soaked lentils, carrot, and broth','Simmer 20 min until very soft','Blend to desired consistency. Cool before portioning'],tip:'Excellent iron source. Add pinch of turmeric. Serve with a vitamin C food to boost iron absorption.',v:'https://www.youtube.com/results?search_query=red+lentil+baby+food+puree'},
+  {e:'🐟',n:'Salmon & Sweet Potato Cakes',age:'9m',time:'30 min',f:true,i:['1 can (5oz) wild salmon, drained','½ cup mashed sweet potato','1 egg','1 tbsp breadcrumbs'],s:['Mix all ingredients until combined','Form into small silver-dollar sized patties','Pan fry on medium 3–4 min per side until golden. Cool before serving'],tip:'Reheat from frozen at 350°F for 10 min. Great omega-3 source!',v:'https://www.youtube.com/results?search_query=salmon+sweet+potato+baby+fish+cakes'},
+  {e:'🥚',n:'Mini Egg Muffins',age:'10m',time:'25 min',f:true,i:['6 eggs','¼ cup chopped spinach','2 tbsp grated cheese','¼ cup diced soft veggies'],s:['Preheat oven 350°F. Grease mini muffin tin','Whisk eggs, stir in veggies and cheese','Pour into cups ¾ full. Bake 15–18 min until set'],tip:'Makes 24 muffins. Microwave 30 sec from frozen — perfect grab and go!',v:'https://www.youtube.com/results?search_query=baby+egg+muffins+freezer+BLW'},
+  {e:'🍲',n:'Chicken & Veggie Soft Stew',age:'8m',time:'35 min',f:true,i:['1 chicken breast, cooked & shredded','1 carrot + 1 potato, small dice','½ cup frozen peas','2 cups low-sodium chicken broth'],s:['Bring broth to simmer. Add potato and carrot, cook 10 min','Add peas, cook 5 more min. Stir in chicken','Mash or blend to desired texture for baby\'s age'],tip:'Complete meal — protein, veg, and carb in one bowl!',v:'https://www.youtube.com/results?search_query=baby+chicken+vegetable+stew'},
+];
+const ALLERGEN_TIMELINE=[
+  {mo:'6 Months',age:'6m',color:'tnew',newAllergens:['Egg Yolk','Sesame / Tahini'],carry:[],note:'Introduce allergens only AFTER baby has been successfully introduced to low-risk solid foods first'},
+  {mo:'7 Months',age:'7m',color:'tnew',newAllergens:['Peanuts (thinned)','Tree Nuts (nut butter)'],carry:['Egg Yolk','Sesame'],note:''},
+  {mo:'8 Months',age:'8m',color:'tnew',newAllergens:['Fish (cod, salmon)','Shellfish (shrimp, prawn)'],carry:['Egg Yolk','Sesame','Peanuts','Tree Nuts'],note:'Start with mild white fish like cod or sardines. Two shellfish groups — test separately'},
+  {mo:'9 Months',age:'9m',color:'tnew',newAllergens:['Soy (tempeh, edamame)'],carry:['Egg Yolk','Sesame','Peanuts','Tree Nuts','Fish','Shellfish'],note:'Choose organic soy. Start with tempeh mixed into purée or pureed edamame'},
+  {mo:'10 Months',age:'10m',color:'tnew',newAllergens:['Dairy products (yogurt, butter, kefir)','Gluten / Wheat','Egg Whites'],carry:['Egg Yolk','Sesame','Peanuts','Tree Nuts','Fish','Shellfish','Soy'],note:'Cow\'s milk as a drink — delay until 12 months. Yogurt, cheese, and butter are fine from 10 months'},
+  {mo:'After 12 Months',age:'12m',color:'twarn',newAllergens:["Cow's Milk (as a drink)",'Honey (infant botulism risk before 12 mo)'],carry:['All previous allergens'],note:'Continue offering all introduced allergens at least twice weekly to maintain tolerance'},
+];
+const NUTRIENTS=[
+  {ico:'🩸',name:'Iron',color:'#FEF0F2',icolor:'#E24B4A',roles:'Appetite, energy, growth, brain & behavioural development, prevents anaemia',foods:['Beef & lamb','Chicken liver','Egg yolk','Salmon & sardines','Lentils & chickpeas','Spinach','Pumpkin seeds'],tip:'Always pair iron-rich foods with a vitamin C source (broccoli, citrus, bell pepper) to double absorption.'},
+  {ico:'☀️',name:'Vitamin D3',color:'#FEF4E0',icolor:'#E8A030',roles:'Bone & teeth development, immune system strength',foods:['Sardines & wild salmon','Egg yolks','Beef & chicken liver','Mushrooms (sun-exposed)'],tip:'Exclusively breastfed infants and breastfeeding mothers both require daily vitamin D3 supplementation.'},
+  {ico:'🦴',name:'Calcium',color:'#E8F6FA',icolor:'#1A6070',roles:'Strong bones & teeth, healthy heart, nervous system, muscle development',foods:['Full-fat Greek yogurt','Kefir','Cheese','Tofu (calcium-set)','Tahini','Tinned sardines with bones','Leafy greens'],tip:'Vitamin D is needed to absorb calcium — ensure adequate D3 alongside calcium-rich foods.'},
+  {ico:'🧠',name:'Omega-3 Fatty Acids',color:'#EDF3EE',icolor:'#5C7E62',roles:'Brain development, cognitive function, absorption of fat-soluble vitamins, prevents constipation',foods:['Fatty fish (salmon)','Grass-fed beef','Flaxseeds & chia seeds','Walnuts','Omega-3 fortified eggs','Seaweed'],tip:'DHA from fatty fish is far more bioavailable than plant-based ALA sources. Offer oily fish 2x weekly.'},
+  {ico:'💛',name:'Choline',color:'#FEF4E0',icolor:'#8A5010',roles:'Brain development, DNA synthesis, healthy nervous system, metabolism',foods:['Egg yolks','Chicken & turkey','Beef & lamb','Fish','Broccoli','Cauliflower','Asparagus'],tip:'Egg yolks are the single richest choline source — include regularly from 6 months as egg yolk.'},
+  {ico:'🦠',name:'Probiotics',color:'#F0EBF9',icolor:'#7B5EA7',roles:'Stronger digestion & immunity, prevents constipation, colic, reflux & gas, may help eczema',foods:['Full-fat plain yogurt','Kefir','Sauerkraut (fermented)','Tempeh','Miso','Pickles (fermented)'],tip:'Choose plain, unsweetened varieties. Refrigerated fermented foods have live cultures — heated/pasteurized ones do not.'},
+];
+const CHECKLISTS={
+  '6m':{label:'6 Months',sections:{Fruit:['Apple','Apricot','Avocado','Banana','Blueberries','Coconut','Mango','Peach','Pear','Plum','Prunes','Strawberries'],Vegetables:['Beetroot','Bell pepper','Broccoli','Cabbage','Carrots','Cauliflower','Corn','Green Beans','Mushrooms','Peas','Pumpkin','Spinach','Sweet Potato','Zucchini'],Protein:['Beef','Chicken','Chicken liver','Duck','Lamb','Turkey','Egg Yolk*'],Grains:['Oats (soaked)','Rice','Quinoa (soaked)','Millet'],'Healthy Fats':['Avocado oil','Coconut oil','Olive oil','Ghee*'],'Beans & Legumes':['Lentils (soaked)','Chickpeas (soaked)']}},
+  '7m':{label:'7 Months',sections:{Protein:['Pork','White fish*','Salmon*','Sardines*','Egg (whole)*','Tofu'],'New Allergens':['Peanut Butter (thinned)*','Tree Nut Butter*'],'New Foods':['Full egg (whole)','Chia seeds','Hemp seeds','Tahini (sesame)*']}},
+  '8m':{label:'8 Months',sections:{Dairy:['Full-fat Greek yogurt','Kefir','Cheese','Unsalted butter'],'New Allergens':['Fish (cod/salmon)*','Shellfish (shrimp)*'],'New Foods':['Pasta (well cooked)','French toast strips','Soft crackers']}},
+  '9m':{label:'9 Months',sections:{'New Allergens':['Soy (tempeh, edamame)*'],'Finger Foods':['Banana oat pancakes','Scrambled egg bits','Cheese cubes','Rice cake strips','Soft pear slices','Mini meatballs','Pasta pieces','Salmon patties'],'New Grains':['Barley (soaked)','Buckwheat','Amaranth']}},
+  '10m':{label:'10 Months',sections:{'New Allergens':['Dairy products (yogurt/kefir/butter)*','Gluten / Wheat*','Egg whites*'],'Table Foods':['Quesadilla strips','Bean soft tacos','Avocado toast strips','Mini grilled cheese','Hummus + soft veggie']}},
+  '11m':{label:'11 Months',sections:{'Family Foods':['Adapted family meals','Soft pasta with sauce','Chicken veggie wrap','Bean quesadilla','Turkey + avocado','Hummus + soft veggies'],'Independence':['Self-feeding with spoon','Sippy cup practice','Textured mixed meals']}},
+  '12m':{label:'12+ Months',sections:{'New Foods':["Cow's milk (whole, full-fat)",'Honey (after 12 months ONLY)'],'Milestone Foods':['Family meals (low salt/sugar)','Soft raw fruits','Small soft cheese cubes','Mini sandwiches','Veggie fried rice','Bean burritos']}},
+};
+const SHOPPING={'🥦 Produce':[{n:'Sweet potatoes',q:'3 lbs',c:'$2.50',chk:false},{n:'Carrots',q:'2 lb bag',c:'$1.80',chk:false},{n:'Zucchini',q:'2 medium',c:'$1.20',chk:false},{n:'Broccoli',q:'1 head',c:'$1.80',chk:false},{n:'Butternut squash',q:'1 medium',c:'$2.00',chk:false},{n:'Baby spinach',q:'5 oz bag',c:'$2.50',chk:false},{n:'Avocados',q:'4 ripe',c:'$3.00',chk:false},{n:'Bananas',q:'1 bunch',c:'$1.20',chk:false},{n:'Pears',q:'4 medium',c:'$2.50',chk:false},{n:'Apples',q:'4 medium',c:'$2.00',chk:false}],'🥩 Proteins':[{n:'Chicken breast',q:'1.5 lbs',c:'$5.00',chk:false},{n:'Canned wild salmon',q:'2 cans 5oz',c:'$4.50',chk:false},{n:'Red lentils (dry)',q:'1 lb bag',c:'$2.00',chk:false},{n:'Eggs (large)',q:'1 dozen',c:'$3.50',chk:false},{n:'Ground beef (lean)',q:'1 lb',c:'$5.00',chk:false},{n:'Silken tofu',q:'1 block',c:'$2.00',chk:false}],'🥛 Dairy':[{n:'Full-fat Greek yogurt',q:'32 oz',c:'$4.50',chk:false},{n:'Cheddar cheese block',q:'8 oz',c:'$3.00',chk:false},{n:'Unsalted butter',q:'1 stick',c:'$1.50',chk:false}],'🌾 Pantry':[{n:'Rolled oats',q:'18 oz',c:'$2.80',chk:false},{n:'Low-sodium broth',q:'32 oz carton',c:'$2.50',chk:false},{n:'Canned chickpeas',q:'1 can',c:'$1.20',chk:false},{n:'Olive oil',q:'small bottle',c:'$4.00',chk:false},{n:'Ground cinnamon',q:'spice jar',c:'$2.00',chk:false},{n:'Whole grain bread',q:'1 loaf',c:'$3.50',chk:false},{n:'Natural peanut butter',q:'1 jar',c:'$4.50',chk:false},{n:'Tahini (no additives)',q:'1 jar',c:'$5.00',chk:false}],'❄️ Frozen':[{n:'Frozen peas',q:'16 oz bag',c:'$1.80',chk:false},{n:'Frozen blueberries',q:'12 oz bag',c:'$3.50',chk:false},{n:'Frozen sweet corn',q:'12 oz bag',c:'$1.60',chk:false},{n:'Frozen edamame shelled',q:'12 oz bag',c:'$2.50',chk:false}],'🧰 Supplies':[{n:'Ice cube trays w/ lids',q:'2 trays',c:'$8.00',chk:false},{n:'Zip freezer bags (quart)',q:'1 box',c:'$3.50',chk:false},{n:'Small silicone spatula',q:'1',c:'$4.00',chk:false},{n:'Mason jars (4 oz)',q:'12 pack',c:'$9.00',chk:false}]};
+const FREEZER=[{e:'🥕',n:'Veggie Purées',d:'3 months',t:'Carrots, peas, squash, broccoli'},{e:'🍎',n:'Fruit Purées',d:'3 months',t:'Apple, pear, peach, mango'},{e:'🍗',n:'Meat Purées',d:'1–2 months',t:'Label clearly with protein type'},{e:'🥣',n:'Oatmeal',d:'3 months',t:'Freeze flat in zip bags'},{e:'🫘',n:'Legume Purée',d:'3 months',t:'Lentils, beans, chickpeas'},{e:'🥞',n:'Baby Pancakes',d:'2 months',t:'Layer with parchment paper'},{e:'🥚',n:'Egg Muffins',d:'1 month',t:'Wrap individually in wrap'},{e:'🐟',n:'Fish Cakes',d:'1–2 months',t:'Freeze flat on tray first'},{e:'🍲',n:'Stews & Soups',d:'2–3 months',t:'Freeze in 4 oz portions'}];
+const BATCH=[{t:'0:00–0:30',s:'Roast butternut squash + sweet potatoes at 400°F'},{t:'0:00–0:20',s:'Steam carrots, peas, broccoli on stovetop simultaneously'},{t:'0:20–0:35',s:'Blend all veggies, fill ice cube trays, label and freeze'},{t:'0:35–1:00',s:'Cook soaked red lentils with carrots for lentil dal'},{t:'1:00–1:20',s:'Make banana oat pancake batter and cook in batches'},{t:'1:20–1:45',s:'Bake mini egg muffins (mix 5 min, bake 18 min)'},{t:'1:45–2:00',s:"Package, label, and store everything. Done! 🎉"}];
+const STATUSES=['none','safe','caution','avoid'];
+const SLABELS={none:'Not tried yet',safe:'✓ Tolerated',caution:'⚠ Watch',avoid:'✕ Avoid'};
+let age='6m',week=1,plan={},drag=null,editTarget=null;
+let checklistState={};
+let journalEntries=[];
+let allergyData=[{e:'🥚',n:'Egg Yolk',s:'none'},{e:'🥜',n:'Peanuts',s:'none'},{e:'🌰',n:'Tree Nuts',s:'none'},{e:'🐟',n:'Fish',s:'none'},{e:'🦐',n:'Shellfish',s:'none'},{e:'🌾',n:'Wheat',s:'none'},{e:'🥛',n:'Dairy',s:'none'},{e:'🫘',n:'Soy',s:'none'},{e:'🌱',n:'Sesame',s:'none'}];
+
+function showSec(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');
+  if(btn){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');}
+  if(id==='foods')renderFoods('all');
+  if(id==='recipes')renderRecs('all');
+  if(id==='shopping')renderShop();
+  if(id==='freezer')renderFreezer();
+  if(id==='allergen')renderAllergenTimeline();
+  if(id==='nutrients')renderNutrients();
+  if(id==='checklist')renderCL('6m');
+  if(id==='journal')renderJournal();
+}
+
+function setAge(el,a){age=a;document.querySelectorAll('.atab[data-age]').forEach(t=>t.classList.remove('on'));el.classList.add('on');plan={};genWeek();updateWlbl();}
+function changeWk(d){week=Math.max(1,Math.min(4,week+d));plan={};genWeek();updateWlbl();}
+function updateWlbl(){const l={'6m':'6 months','7m':'7–8 months','9m':'9–10 months','11m':'11–12 months'};document.getElementById('wlbl').textContent=`Week ${week} · ${l[age]}`;}
+function noRepeat(pool,used){const a=pool.filter(m=>!used.includes(m.n));return(a.length?a:pool)[Math.floor(Math.random()*(a.length||pool.length))];}
+function genWeek(){plan={};MTYPES.forEach(mt=>{plan[mt.k]=[];const u=[];for(let d=0;d<7;d++){const item=noRepeat(MEALS[age][mt.k],u);u.push(item.n);if(u.length>3)u.shift();plan[mt.k].push({...item});}});closePicker();renderGrid();clearHL();}
+function renderGrid(){const tb=document.getElementById('meal-body');tb.innerHTML='';MTYPES.forEach(mt=>{const tr=document.createElement('tr');const th=document.createElement('th');th.className='mlbl';th.textContent=mt.l;tr.appendChild(th);for(let d=0;d<7;d++){const td=document.createElement('td');const item=plan[mt.k][d];td.innerHTML=`<div class="mcell ${mt.c}" draggable="true" data-row="${mt.k}" data-day="${d}"><span class="cemoji">${item.e}</span><span class="cname">${item.n}</span>${item.f?'<span class="cfrz">❄️</span>':''}<button class="cedit" onclick="openPicker('${mt.k}',${d},event)">✎</button></div>`;tr.appendChild(td);}tb.appendChild(tr);});addDrag();}
+function addDrag(){document.querySelectorAll('.mcell').forEach(c=>{c.addEventListener('dragstart',e=>{drag=c;c.classList.add('dragging');e.dataTransfer.effectAllowed='move';});c.addEventListener('dragend',()=>{c.classList.remove('dragging');document.querySelectorAll('.mcell').forEach(x=>x.classList.remove('dragover'));});c.addEventListener('dragover',e=>{e.preventDefault();if(c!==drag){document.querySelectorAll('.mcell').forEach(x=>x.classList.remove('dragover'));c.classList.add('dragover');}});c.addEventListener('dragleave',()=>c.classList.remove('dragover'));c.addEventListener('drop',e=>{e.preventDefault();c.classList.remove('dragover');if(!drag||drag===c)return;const sr=drag.dataset.row,sd=+drag.dataset.day,tr=c.dataset.row,td=+c.dataset.day;const tmp=plan[sr][sd];plan[sr][sd]=plan[tr][td];plan[tr][td]=tmp;renderGrid();});});}
+function openPicker(row,day,e){e.stopPropagation();editTarget={row,day};const ml=MEALS[age][row];const lbl={breakfast:'Breakfast',lunch:'Lunch',snack:'Snack',dinner:'Dinner'};document.getElementById('picker-title').textContent=`Choose a ${lbl[row]} option`;document.getElementById('pgrid').innerHTML=ml.map(m=>`<div class="popt" onclick="selectMeal('${m.n}')"><span class="pe">${m.e}</span><div class="pn">${m.n}</div>${m.f?'<div class="pf">❄️ Freezable</div>':''}</div>`).join('');document.getElementById('picker').style.display='block';document.getElementById('picker').scrollIntoView({behavior:'smooth',block:'nearest'});}
+function selectMeal(n){if(!editTarget)return;const{row,day}=editTarget;const found=MEALS[age][row].find(m=>m.n===n);if(found){plan[row][day]={...found};renderGrid();}closePicker();}
+function closePicker(){document.getElementById('picker').style.display='none';editTarget=null;}
+function checkDups(){let cnt=0;const b=document.getElementById('dupbanner');document.querySelectorAll('.mcell').forEach(c=>c.classList.remove('dup'));MTYPES.forEach(mt=>{for(let d=0;d<6;d++){if(plan[mt.k]&&plan[mt.k][d]&&plan[mt.k][d+1]&&plan[mt.k][d].n===plan[mt.k][d+1].n){cnt++;const cs=document.querySelectorAll(`.mcell[data-row="${mt.k}"]`);if(cs[d])cs[d].classList.add('dup');if(cs[d+1])cs[d+1].classList.add('dup');}}});document.getElementById('dupmsg').textContent=cnt?`${cnt} consecutive duplicate${cnt>1?'s':''} found — highlighted red. Drag or click ✎ to fix.`:'No consecutive duplicates! Great variety this week ✓';b.style.background=cnt?'#FEF0F2':'#EDF3EE';b.style.borderColor=cnt?'rgba(240,175,186,.6)':'rgba(92,126,98,.3)';b.style.color=cnt?'#A32D2D':'#3D7A47';b.classList.add('on');}
+function clearHL(){document.querySelectorAll('.mcell').forEach(c=>c.classList.remove('dup','dragover'));document.getElementById('dupbanner').classList.remove('on');}
+
+function renderFoods(filter){let foods=FOODS;if(filter!=='all'){const ord={'6m':0,'7m':1,'8m':1,'9m':2,'10m':2,'11m':3};const ford={'6m':0,'7m':1,'8m':1,'9m':2,'10m':2,'11m':3};foods=FOODS.filter(f=>ford[f.age]<=ord[filter]);}document.getElementById('food-grid').innerHTML=foods.map(f=>`<div class="fcard ${f.t==='protein'?'pro':f.t==='grain'?'gr':''}" onclick='showFoodModal(${JSON.stringify(f).replace(/'/g,"&#39;")})'>${f.f?'<div class="fb">❄️</div>':''}<span class="fe">${f.e}</span><div class="fn">${f.n}</div><div class="fa">Intro: ${f.age}</div></div>`).join('');}
+function filterFoods(el,a){document.querySelectorAll('#food-atabs .atab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderFoods(a);}
+function showFoodModal(food){document.getElementById('modal-title').innerHTML=`${food.e} ${food.n}`;document.getElementById('modal-body').innerHTML=`<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap"><span class="tag tg">Intro at ${food.age}</span>${food.f?'<span class="tag tb">❄️ Freezer-Safe</span>':'<span class="tag to">Fresh Only</span>'}</div><div class="rsec">How to Prep</div><p style="font-size:13px;color:var(--ink-mid);line-height:1.65;margin-bottom:14px">${food.prep}</p><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(food.n+' baby food recipe')}" target="_blank" class="vlink"><i class="ti ti-brand-youtube" aria-hidden="true"></i> Watch how to prep ${food.n} for baby</a>`;document.getElementById('modal').classList.add('on');}
+
+function renderRecs(filter){let r=RECIPES;if(filter==='freeze')r=RECIPES.filter(x=>x.f);else if(filter!=='all')r=RECIPES.filter(x=>x.age===filter);document.getElementById('rec-grid').innerHTML=r.map((rec,i)=>`<div class="rcard" onclick="showRecModal(${RECIPES.indexOf(rec)})"><div class="rhead"><span class="remoji">${rec.e}</span><div class="rname">${rec.n}</div><div class="rmeta"><span class="rbdg bag">📅 ${rec.age}+</span><span class="rbdg bat">⏱ ${rec.time}</span>${rec.f?'<span class="rbdg baf">❄️ Freezable</span>':''}</div></div><div class="rbody"><div class="rsec">Key Ingredients</div><ul class="ings">${rec.i.slice(0,3).map(x=>`<li>${x}</li>`).join('')}${rec.i.length>3?`<li>+${rec.i.length-3} more…</li>`:''}</ul></div></div>`).join('');}
+function showRecModal(idx){const r=RECIPES[idx];document.getElementById('modal-title').innerHTML=`${r.e} ${r.n}`;document.getElementById('modal-body').innerHTML=`<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap"><span class="tag tg">📅 ${r.age}+</span><span class="tag to">⏱ ${r.time}</span>${r.f?'<span class="tag tb">❄️ Freezable</span>':''}</div><div class="rsec">Ingredients</div><ul class="ings">${r.i.map(x=>`<li>${x}</li>`).join('')}</ul><div class="rsec" style="margin-top:14px">Steps</div><ol class="steps">${r.s.map(s=>`<li>${s}</li>`).join('')}</ol>${r.tip?`<div style="margin-top:14px;background:var(--sage-p);border-radius:9px;padding:12px;font-size:12px;color:var(--ink-mid);border-left:3px solid var(--sage)">💡 <b>Tip:</b> ${r.tip}</div>`:''}<a href="${r.v}" target="_blank" class="vlink" style="margin-top:12px"><i class="ti ti-brand-youtube" aria-hidden="true"></i> Watch this recipe on YouTube</a>`; document.getElementById('modal').classList.add('on');}
+function filterRecs(el,f){document.querySelectorAll('#rec-atabs .atab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderRecs(f);}
+
+function renderAllergenTimeline(){document.getElementById('allergen-timeline').innerHTML=ALLERGEN_TIMELINE.map(m=>`
+  <div class="tmonth">
+    <div class="tmonth-age">${m.mo}</div>
+    <div class="tallergens">
+      ${m.newAllergens.map(a=>`<span class="tbadge tnew">🆕 ${a}</span>`).join('')}
+      ${m.carry.length?m.carry.map(a=>`<span class="tbadge tcarry">${a}</span>`).join(''):''}
+    </div>
+    ${m.note?`<div style="font-size:12px;color:var(--ink-soft);margin-top:8px;line-height:1.5">ℹ️ ${m.note}</div>`:''}
+  </div>`).join('');}
+
+function renderNutrients(){document.getElementById('nut-grid').innerHTML=NUTRIENTS.map(n=>`
+  <div class="nurcard">
+    <div class="nurhead" style="background:${n.color}">
+      <div class="nurico" style="background:rgba(255,255,255,.6);font-size:20px">${n.ico}</div>
+      <div><div class="nurname">${n.name}</div><div class="nurrole" style="font-size:11px;color:var(--ink-mid);margin-top:2px">${n.roles}</div></div>
+    </div>
+    <div class="nurbody">
+      <div class="nurtag">Best Food Sources</div>
+      <div class="nurfoods">${n.foods.map(f=>`<span class="nurfood">${f}</span>`).join('')}</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--ink-mid);line-height:1.6;background:var(--sage-p);border-radius:8px;padding:10px;border-left:3px solid var(--sage)">💡 ${n.tip}</div>
+    </div>
+  </div>`).join('');}
+
+function filterCL(el,mo){document.querySelectorAll('#cl-atabs .atab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderCL(mo);}
+function renderCL(mo){const data=CHECKLISTS[mo];if(!checklistState[mo])checklistState[mo]={};const total=Object.values(data.sections).flat().length;const done=Object.keys(checklistState[mo]).filter(k=>checklistState[mo][k]).length;document.getElementById('cl-content').innerHTML=`
+  <div style="background:var(--sage-p);border-radius:var(--rs);padding:14px 16px;margin-bottom:16px;border:1px solid var(--border)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:600;color:var(--ink)">${data.label} — Progress</div>
+      <div style="font-size:13px;font-weight:600;color:var(--sage)">${done}/${total} tried</div>
+    </div>
+    <div style="background:var(--border);border-radius:20px;height:6px"><div style="background:var(--sage);height:6px;border-radius:20px;width:${total?Math.round(done/total*100):0}%;transition:width .3s"></div></div>
+  </div>
+  ${Object.entries(data.sections).map(([sec,items])=>`
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-h" style="margin-bottom:10px;font-size:15px">${sec}</div>
+    <div class="mchklist">
+      ${items.map(item=>{const isAllergen=item.endsWith('*');const key=mo+'_'+item;const chk=checklistState[mo][item]||false;return`<div class="mchkitem" onclick="toggleCL('${mo}','${item.replace(/'/g,'\\\'')}')" ><div class="mchkbox ${chk?'on':''}"></div><span class="mchktxt ${chk?'done':''}">${item.replace('*','')}${isAllergen?' <span style="font-size:9px;color:#B85A20;font-weight:700">ALLERGEN</span>':''}</span></div>`;}).join('')}
+    </div>
+  </div>`).join('')}`;}
+function toggleCL(mo,item){if(!checklistState[mo])checklistState[mo]={};checklistState[mo][item]=!checklistState[mo][item];const tab=document.querySelector('#cl-atabs .atab.on');renderCL(mo);}
+
+function addJEntry(){const date=document.getElementById('j-date').value;const food=document.getElementById('j-food').value;const age=document.getElementById('j-age').value;const react=document.querySelector('input[name="jreact"]:checked')?.value||'ok';const notes=document.getElementById('j-notes').value;if(!food.trim())return;journalEntries.unshift({date,food,age,react,notes,id:Date.now()});document.getElementById('j-date').value='';document.getElementById('j-food').value='';document.getElementById('j-age').value='';document.getElementById('j-notes').value='';renderJournal();}
+function renderJournal(){const el=document.getElementById('j-entries');if(!journalEntries.length){el.innerHTML=`<div style="text-align:center;padding:24px;color:var(--ink-soft);font-size:13px">No entries yet — add your first food introduction above!</div>`;return;}const rmap={ok:'Tolerated well',watch:'Watch closely',avoid:'Avoid',delay:'Delay — try again'};const bmap={ok:'jbdg-ok',watch:'jbdg-watch',avoid:'jbdg-avoid',delay:'jbdg-watch'};el.innerHTML=journalEntries.map(e=>`<div class="jentry"><div class="jentry-h"><span class="jentry-date">${e.date||'No date'}</span><span class="jentry-food">${e.food}</span></div>${e.age?`<div style="font-size:11px;color:var(--ink-soft);margin-bottom:6px">${e.age}</div>`:''}<div class="jentry-note">${e.notes||'No notes added'}</div><div class="jentry-badges"><span class="jbdg ${bmap[e.react]}">${rmap[e.react]}</span></div></div>`).join('');}
+
+function renderShop(){document.getElementById('shop-grid').innerHTML=Object.entries(SHOPPING).map(([cat,items])=>`<div class="scat"><div class="scath">${cat}</div>${items.map((item,i)=>`<div class="sitem" onclick="toggleShop('${cat}',${i})"><div class="schk ${item.chk?'on':''}"></div><span class="sname" style="${item.chk?'text-decoration:line-through;color:var(--ink-soft)':''}">${item.n}</span><span class="sqty">${item.q}</span><span class="scst">${item.c}</span></div>`).join('')}</div>`).join('');}
+function toggleShop(cat,idx){SHOPPING[cat][idx].chk=!SHOPPING[cat][idx].chk;renderShop();}
+function chkAll(state){Object.values(SHOPPING).forEach(items=>items.forEach(i=>i.chk=state));renderShop();}
+
+function renderFreezer(){document.getElementById('frz-grid').innerHTML=FREEZER.map(f=>`<div class="frzcard"><span class="ffemoji">${f.e}</span><div class="ffname">${f.n}</div><div class="ffdur">${f.d}</div><div class="fftip">${f.t}</div></div>`).join('');document.getElementById('batch-plan').innerHTML=BATCH.map(s=>`<div class="bstep"><span class="btime">${s.t}</span><span class="btask">${s.s}</span></div>`).join('');}
+
+function closeModal(){document.getElementById('modal').classList.remove('on');}
+
+function installPWA(){alert('To add to your home screen:\n\niPhone/iPad: Tap the Share button (square with arrow) → scroll down → tap "Add to Home Screen"\n\nAndroid: Tap the 3-dot menu → "Add to Home Screen"\n\nChrome Desktop: Click the install icon in the address bar\n\nYour planner will appear as an app icon — opens fullscreen, no browser bar!');}
+
+genWeek();updateWlbl();renderJournal();
+</script>
+</html>
